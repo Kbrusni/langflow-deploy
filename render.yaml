@@ -1,5 +1,29 @@
 services:
   - type: web
+    name: langflow
+    env: python
+    plan: free
+    buildCommand: |
+      pip install poetry
+      poetry env use 3.11.9 || true
+      poetry install
+    startCommand: |
+      poetry run langflow run
+    pythonVersion: 3.11.9
+    envVars:
+      - key: LANGFLOW_DATABASE_URL
+        value: sqlite:////app/data/.cache/langflow/langflow.db
+      - key: LANGFLOW_HOST
+        value: 0.0.0.0
+      - key: LANGFLOW_PORT
+        value: 10000
+      - key: LANGFLOW_LOG_LEVEL
+        value: INFO
+    disk:
+      name: langflow-data
+      mountPath: /app/data
+services:
+  - type: web
     name: langflow-deploy
     env: python
     plan: free
